@@ -6,8 +6,8 @@ angular.module('apollonApp', [
 ]).config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/main',
-        controller: 'MainCtrl'
+        templateUrl: 'partials/dashboard',
+        controller: 'DashboardCtrl'
       })
       .when('/login', {
         templateUrl: 'partials/login',
@@ -19,37 +19,41 @@ angular.module('apollonApp', [
       })
       .when('/settings', {
         templateUrl: 'partials/settings',
-        controller: 'SettingsCtrl',
-        authenticate: true
+        controller: 'SettingsCtrl'
+      })
+      .when('/cars', {
+        templateUrl: 'partials/cars',
+        controller: 'CarsCtrl'
+      })
+      .when('/drivers', {
+        templateUrl: 'partials/drivers',
+        controller: 'DriversCtrl'
+      })
+      .when('/users', {
+        templateUrl: 'partials/users',
+        controller: 'UsersCtrl'
       })
       .otherwise({
         redirectTo: '/'
-      });
+      })
       
-    $locationProvider.html5Mode(true);
-      
+    $locationProvider.html5Mode(true)
+
     // Intercept 401s and redirect you to login
-    $httpProvider.interceptors.push(['$q', '$location', function($q, $location) {
+    $httpProvider.interceptors.push(function($q, $location) {
       return {
         'responseError': function(response) {
           if(response.status === 401) {
-            $location.path('/login');
-            return $q.reject(response);
+            $location.path('/login')
           }
-          else {
-            return $q.reject(response);
-          }
+          return $q.reject(response)
         }
-      };
-    }]);
+      }
+    })
   })
   .run(function ($rootScope, $location, Auth) {
-
-    // Redirect to login if route requires auth and you're not logged in
-    $rootScope.$on('$routeChangeStart', function (event, next) {
-      
-      if (next.authenticate && !Auth.isLoggedIn()) {
-        $location.path('/login');
-      }
-    });
-  });
+    $rootScope.$on('$routeChangeStart', function () {
+      if (!Auth.isLoggedIn())
+        $location.path('/login')
+    })
+  })

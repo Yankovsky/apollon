@@ -1,21 +1,30 @@
 angular.module('apollonApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
+      title: 'Dashboard',
+      link: '/'
     }, {
-      'title': 'Settings',
-      'link': '/settings'
-    }];
+      title: 'Cars',
+      link: '/cars'
+    }, {
+      title: 'Drivers',
+      link: '/drivers'
+    }, {
+      title: 'Users',
+      link: '/users'
+    }, {
+      title: 'Settings',
+      link: '/settings'
+    }]
     
     $scope.logout = function() {
       Auth.logout()
       .then(function() {
-        $location.path('/login');
-      });
-    };
+        $location.path('/login')
+      })
+    }
     
     $scope.isActive = function(route) {
-      return route === $location.path();
-    };
-  });
+      return route === $location.path()
+    }
+  })
